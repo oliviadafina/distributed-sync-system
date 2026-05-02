@@ -15,7 +15,7 @@
 
 > 📺 **[Video YouTube → https://youtu.be/rrKOlAeSnCo](https://youtu.be/rrKOlAeSnCo)**
 > 
-> 📄 **[Laporan (Google Docs) → https://docs.google.com/document/d/1jPh-g50AHm8meTjDLbeGENhAhKbE3rF8B8M9yyw5wvQ/edit?usp=sharing](https://docs.google.com/document/d/1jPh-g50AHm8meTjDLbeGENhAhKbE3rF8B8M9yyw5wvQ/edit?usp=sharing)**
+> 📄 **[Laporan (Google Docs) → https://drive.google.com/drive/folders/19FqcqJXRAXJyBIUKzoAIO0IcIZ7iyN8c?usp=sharing](https://drive.google.com/drive/folders/19FqcqJXRAXJyBIUKzoAIO0IcIZ7iyN8c?usp=sharing)**
 
 ---
 
