@@ -11,9 +11,11 @@
 
 ---
 
-## 🎬 Video Demonstrasi
+## 🔗 Link Pengumpulan
 
-> 📺 **[Tonton di YouTube → https://youtu.be/rrKOlAeSnCo](https://youtu.be/rrKOlAeSnCo)**
+> 📺 **[Video YouTube → https://youtu.be/rrKOlAeSnCo](https://youtu.be/rrKOlAeSnCo)**
+> 
+> 📄 **[Laporan (Google Docs) → https://docs.google.com/document/d/1jPh-g50AHm8meTjDLbeGENhAhKbE3rF8B8M9yyw5wvQ/edit?usp=sharing](https://docs.google.com/document/d/1jPh-g50AHm8meTjDLbeGENhAhKbE3rF8B8M9yyw5wvQ/edit?usp=sharing)**
 
 ---
 
