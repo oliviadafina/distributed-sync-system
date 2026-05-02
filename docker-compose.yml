@@ -1,0 +1,67 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  node1:
+    build: 
+      context: .
+      dockerfile: docker/Dockerfile.node
+    ports:
+      - "8001:8000"
+    environment:
+      - NODE_ID=node_1
+      - NODE_HOST=0.0.0.0
+      - NODE_PORT=8000
+      - PEERS=http://node2:8000,http://node3:8000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  node2:
+    build: 
+      context: .
+      dockerfile: docker/Dockerfile.node
+    ports:
+      - "8002:8000"
+    environment:
+      - NODE_ID=node_2
+      - NODE_HOST=0.0.0.0
+      - NODE_PORT=8000
+      - PEERS=http://node1:8000,http://node3:8000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  node3:
+    build: 
+      context: .
+      dockerfile: docker/Dockerfile.node
+    ports:
+      - "8003:8000"
+    environment:
+      - NODE_ID=node_3
+      - NODE_HOST=0.0.0.0
+      - NODE_PORT=8000
+      - PEERS=http://node1:8000,http://node2:8000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+volumes:
+  redis_data:

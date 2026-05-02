@@ -1,0 +1,181 @@
+openapi: 3.0.0
+info:
+  title: Distributed Synchronization System API
+  description: API untuk Distributed Lock, Queue, dan Cache Coherence nodes.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8001
+    description: Node 1 (Atau ganti port ke 8002/8003 untuk node lain)
+
+paths:
+  /health:
+    get:
+      summary: Cek status node
+      description: Mengembalikan status kesehatan node saat ini beserta status algoritma Raft (Leader/Follower).
+      responses:
+        '200':
+          description: Berhasil mendapatkan status node.
+
+  /lock/acquire:
+    post:
+      summary: Mendapatkan hak akses (Lock) pada sebuah resource
+      description: Meminta distributed lock menggunakan algoritma Raft Consensus.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                resource:
+                  type: string
+                  example: "database_table_1"
+                client_id:
+                  type: string
+                  example: "client_991"
+                type:
+                  type: string
+                  enum: [exclusive, shared]
+                  example: "exclusive"
+                timeout:
+                  type: integer
+                  description: Waktu maksimal menunggu antrean lock (detik)
+                  example: 10
+                ttl:
+                  type: integer
+                  description: Time-To-Live lock secara otomatis terlepas (detik)
+                  example: 30
+      responses:
+        '200':
+          description: Status akuisisi lock berhasil atau gagal karena sedang dipakai.
+
+  /lock/release:
+    post:
+      summary: Melepaskan hak akses (Lock)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                resource:
+                  type: string
+                  example: "database_table_1"
+                client_id:
+                  type: string
+                  example: "client_991"
+      responses:
+        '200':
+          description: Lock berhasil dilepas.
+
+  /queue/publish:
+    post:
+      summary: Memasukkan pesan baru ke dalam antrean
+      description: Mengirim pesan ke suatu topik. Sistem menggunakan Consistent Hashing untuk menentukan node mana yang bertanggung jawab.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                topic:
+                  type: string
+                  example: "sensor_data"
+                payload:
+                  type: object
+                  example: {"temperature": 32.5}
+      responses:
+        '200':
+          description: Pesan berhasil dimasukkan.
+
+  /queue/poll/{topic}:
+    get:
+      summary: Mengambil pesan dari antrean
+      parameters:
+        - name: topic
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "sensor_data"
+        - name: timeout
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 5
+      responses:
+        '200':
+          description: Berhasil mendapatkan pesan atau antrean kosong.
+
+  /queue/ack:
+    post:
+      summary: Acknowledge pesan
+      description: Mengonfirmasi bahwa pesan telah berhasil diproses agar dihapus dari daftar recovery/processing.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                topic:
+                  type: string
+                  example: "sensor_data"
+                message_id:
+                  type: string
+                  example: "msg_123456_node_1"
+      responses:
+        '200':
+          description: Pesan berhasil di-acknowledge.
+
+  /cache/{key}:
+    get:
+      summary: Membaca data dari cache
+      description: Membaca data dari memori cache lokal menggunakan protokol MESI.
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "user_123_profile"
+      responses:
+        '200':
+          description: Data berhasil ditemukan.
+        '404':
+          description: Data tidak ditemukan.
+          
+    post:
+      summary: Menulis/Update data ke dalam cache
+      description: Menulis data ke cache lokal dan melakukan invalidasi pada node lain (Protokol MESI).
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "user_123_profile"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                value:
+                  type: string
+                  example: "{\"name\": \"John\"}"
+      responses:
+        '200':
+          description: Data berhasil ditulis.
+
+  /cache/metrics:
+    get:
+      summary: Mengambil metrik performa Cache
+      description: Menampilkan jumlah hit, miss, evictions, dan pesan Bus snoop.
+      responses:
+        '200':
+          description: Statistik Cache.
