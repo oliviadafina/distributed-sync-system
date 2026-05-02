@@ -1,6 +1,6 @@
 # 🔐 Distributed Synchronization System
 
-> Tugas 2 — Sistem Parallel dan Terdistribusi  
+> Tugas 3 — Sistem Parallel dan Terdistribusi  
 > Implementasi sistem sinkronisasi terdistribusi dengan Raft Consensus, Consistent Hashing, dan MESI Protocol menggunakan Python & Docker.
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
